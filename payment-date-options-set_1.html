@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payment Start Date — option set</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#14134f;--ink:#1f2430;--mut:#6b7280;--field:#dfe3ec;--fieldbd:#cfd5e2;--line:#e6e8ef;
+    --red:#e0362c;--availbg:#eceefb;--disabled:#b4bac9;--infobg:#eceefb;--infobd:#c9cdec;--info:#2c2f8f;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:#eef0f4;color:var(--ink);font-family:'Poppins',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased;font-size:15px}
+  .page{max-width:1040px;margin:0 auto;padding:24px 20px 90px}
+  .note{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 20px;margin-bottom:16px}
+  .note h1{margin:0 0 4px;font-size:16px;color:var(--navy)}
+  .note p{margin:0;color:#4a5566;font-size:13px}
+  .switch{display:flex;flex-wrap:wrap;background:#e3e6ee;border-radius:10px;padding:4px;margin-top:12px;gap:3px}
+  .switch button{border:none;background:transparent;font-family:inherit;font-size:12.5px;font-weight:600;color:#5c6472;padding:8px 12px;border-radius:7px;cursor:pointer}
+  .switch button.on{background:#fff;color:var(--navy);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+
+  .card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:30px 34px;box-shadow:0 6px 20px rgba(20,20,60,.06)}
+  .lbl{font-weight:700;font-size:17px;margin:0 0 10px}.lbl .rq{color:var(--red)}
+  .drop{background:var(--field);border-radius:8px;padding:15px 16px;display:flex;align-items:center;color:#4a5160;font-size:16px}
+  .drop::after{content:"▾";margin-left:auto;color:#3a4150;font-size:14px}
+  .mb{margin-bottom:24px}
+  .field{background:var(--field);border-radius:8px;padding:15px 16px;display:flex;align-items:center;gap:10px;color:var(--ink);font-size:16px}
+  .field .pre{color:#8890a0}
+  .chkrow{display:flex;align-items:center;gap:12px;margin:18px 0 24px;font-weight:700;font-size:16px}
+  .chk{width:22px;height:22px;border:2px solid #9aa2b2;border-radius:4px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;background:#fff}
+  .chk.on{border-color:var(--ink)}.chk.on::after{content:"✓";color:var(--ink);font-size:14px;font-weight:800}
+  .qmark{width:18px;height:18px;border-radius:50%;background:#2f7fe0;color:#fff;font-size:11px;font-weight:700;display:inline-flex;align-items:center;justify-content:center}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:26px 40px;align-items:start}
+
+  .sub{color:var(--mut);font-size:13px;margin:-4px 0 12px}
+  .resolved{margin-top:14px;font-size:14.5px;color:var(--ink)}.resolved b{color:var(--navy)}
+  .optname{font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:#9aa2b2;margin:0 0 8px}
+
+  /* calendar */
+  .calinfo{display:flex;gap:9px;align-items:flex-start;background:var(--infobg);border:1px solid var(--infobd);border-radius:8px;padding:10px 12px;margin:0 0 12px;font-size:12.5px;color:var(--info);line-height:1.45}
+  .calbox{border:2px solid var(--navy);border-radius:10px;overflow:hidden}
+  .calhead{background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:9px 14px}
+  .calhead .sel{background:#fff;color:var(--ink);border-radius:4px;padding:4px 10px;font-size:13px;font-weight:600;display:inline-flex;gap:14px}
+  .calhead .nav{cursor:pointer;font-size:16px}
+  .grid{display:grid;grid-template-columns:repeat(7,1fr);padding:3px 8px 7px}
+  .dow{text-align:center;font-size:11.5px;color:#8890a0;font-weight:600;padding:4px 0}
+  .day{height:34px;display:flex;align-items:center;justify-content:center;font-size:13.5px;color:var(--disabled);border-radius:7px;margin:1px;cursor:not-allowed}
+  .day.avail{color:var(--navy);font-weight:700;border:1.5px solid var(--navy);background:var(--availbg);cursor:pointer}
+  .day.sel{background:var(--navy);color:#fff;border-color:var(--navy);cursor:pointer}
+  .day.empty{cursor:default}
+  .nudge{color:var(--red);font-size:12px;margin-top:9px;min-height:15px;font-weight:500}
+
+  /* quick-pick */
+  .datebtns{display:flex;flex-direction:column;gap:12px}
+  .datebtn{border:2px solid var(--fieldbd);background:#fff;border-radius:10px;padding:15px 18px;cursor:pointer;text-align:left;font-family:inherit;display:flex;align-items:center;gap:12px}
+  .datebtn .cal{font-size:18px;color:#7a8090}.datebtn .d{font-size:16px;font-weight:700}.datebtn .m{font-size:12px;color:var(--mut)}
+  .datebtn:hover{border-color:#a6adcf}
+  .datebtn.on{background:var(--navy);border-color:var(--navy)}.datebtn.on .d{color:#fff}.datebtn.on .m{color:#c3c6e6}.datebtn.on .cal{color:#c3c6e6}
+
+  /* segmented */
+  .seg{display:flex;border:2px solid var(--navy);border-radius:10px;overflow:hidden}
+  .seg b{flex:1;text-align:center;padding:15px;font-weight:700;font-size:16px;cursor:pointer;color:var(--navy);user-select:none}
+  .seg b.on{background:var(--navy);color:#fff}.seg b+b{border-left:2px solid var(--navy)}
+
+  /* dropdown */
+  select.selbox{width:100%;background:var(--field);border:none;border-radius:8px;padding:15px 16px;font-size:16px;color:var(--ink);font-family:inherit;appearance:none;cursor:pointer}
+  .selwrap{position:relative}.selwrap::after{content:"▾";position:absolute;right:16px;top:16px;color:#3a4150;pointer-events:none}
+
+  /* radio cards */
+  .rcard{border:2px solid var(--fieldbd);border-radius:10px;padding:14px 16px;display:flex;gap:12px;align-items:center;cursor:pointer;margin-bottom:12px}
+  .rcard.on{border-color:var(--navy);background:var(--availbg)}
+  .rdot{width:20px;height:20px;border-radius:50%;border:2px solid #9aa2b2;flex:0 0 auto;display:flex;align-items:center;justify-content:center}
+  .rcard.on .rdot{border-color:var(--navy)}.rcard.on .rdot::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--navy)}
+  .rcard .t{font-weight:700;font-size:15px}.rcard .d{font-size:12.5px;color:var(--mut);margin-top:1px}
+
+  /* inline sentence */
+  .sentence{font-size:17px;line-height:2.1;color:var(--ink)}
+  .inlinesel{display:inline-block;position:relative}
+  .inlinesel select{background:var(--availbg);border:1.5px solid var(--navy);color:var(--navy);font-weight:700;border-radius:7px;padding:6px 30px 6px 12px;font-size:16px;font-family:inherit;appearance:none;cursor:pointer}
+  .inlinesel::after{content:"▾";position:absolute;right:11px;top:8px;color:var(--navy);pointer-events:none}
+
+  /* chips */
+  .chips{display:flex;flex-wrap:wrap;gap:10px}
+  .chip{border:2px solid var(--fieldbd);background:#fff;border-radius:9px;padding:11px 16px;font-weight:600;font-size:14px;cursor:pointer;font-family:inherit}
+  .chip:hover{border-color:#a6adcf}
+  .chip.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .chip .sm{display:block;font-size:10.5px;font-weight:500;opacity:.7;margin-top:1px}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="note">
+    <h1>Payment Start Date — a set of options</h1>
+    <p>Ordered as requested: Calendar + guidance first, Quick-pick second, then the compact alternatives. All resolve to a real date. Toggle to compare; all interactive.</p>
+    <div class="switch">
+      <button class="on" data-o="1">1 · Calendar + guidance</button>
+      <button data-o="2">2 · Quick-pick</button>
+      <button data-o="3">3 · Segmented</button>
+      <button data-o="4">4 · Dropdown</button>
+      <button data-o="5">5 · Radio cards</button>
+      <button data-o="6">6 · Inline sentence</button>
+      <button data-o="7">7 · Upcoming dates</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <p class="lbl">Frequency <span class="rq">*</span></p>
+    <div class="drop mb">Select Frequency</div>
+    <div class="chkrow"><span class="chk"></span> I would like to make an upfront payment towards my pledge.</div>
+
+    <div class="cols">
+      <div>
+        <p class="lbl">Installment Amount <span class="rq">*</span></p>
+        <div class="field mb"><span class="pre">$</span> 0</div>
+        <p class="lbl">Parish</p>
+        <div class="drop mb">--Select--</div>
+        <div class="chkrow" style="margin-top:6px"><span class="chk on"></span> I would like to cover the processing fee. <span class="qmark">?</span></div>
+        <p class="lbl">In Honor of<span class="rq">*</span></p>
+        <div class="field" style="color:#9aa2b2">Enter In Honor of</div>
+      </div>
+      <div id="slot"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const DATE5='October 5, 2026', DATE25='October 25, 2026';
+  let cur='1', selDay=5;
+  const slot=document.getElementById('slot');
+  const resolvedLine = d => `<div class="resolved">First payment: <b>${d==5?DATE5:DATE25}</b></div>`;
+
+  function buildCal(){
+    let g='';
+    ['Su','Mo','Tu','We','Th','Fr','Sa'].forEach(d=>g+=`<div class="dow">${d}</div>`);
+    for(let i=0;i<4;i++) g+=`<div class="day empty"></div>`;          // Oct 1 2026 = Thu
+    for(let d=1;d<=31;d++){
+      const avail=(d===5||d===25);
+      g+=`<div class="day${avail?' avail':''}${d===selDay?' sel':''}" data-day="${d}">${d}</div>`;
+    }
+    return g;
+  }
+
+  const RENDER={
+    '1':()=>`<p class="optname">Calendar + guidance</p><p class="lbl">Payment Start Date</p>
+      <p class="sub">Processed on the 5th or 25th.</p>
+      <div class="calinfo"><span>ⓘ</span><span>Choose one of the <b>highlighted dates</b> — payments run on the 5th &amp; 25th of each month.</span></div>
+      <div class="calbox"><div class="calhead"><span class="nav">‹</span><span class="sel">2026 &nbsp; Oct</span><span class="nav">›</span></div>
+      <div class="grid">${buildCal()}</div></div><div class="nudge" id="nudge"></div>`,
+    '2':()=>`<p class="optname">Quick-pick buttons</p><p class="lbl">Payment Start Date</p>
+      <p class="sub">Processed on the 5th &amp; 25th — choose one.</p>
+      <div class="datebtns">
+        <button class="datebtn on" data-d="5"><span class="cal">🗓️</span><span><span class="d">${DATE5}</span><span class="m">First available date</span></span></button>
+        <button class="datebtn" data-d="25"><span class="cal">🗓️</span><span><span class="d">${DATE25}</span><span class="m">Next processing day</span></span></button>
+      </div>`,
+    '3':()=>`<p class="optname">Segmented control</p><p class="lbl">Payment Start Date</p>
+      <p class="sub">Payments run on the 5th &amp; 25th — pick one.</p>
+      <div class="seg"><b class="on" data-d="5">5th</b><b data-d="25">25th</b></div><div id="res">${resolvedLine(5)}</div>`,
+    '4':()=>`<p class="optname">Dropdown (matches your field style)</p><p class="lbl">Payment Start Date</p>
+      <p class="sub">Choose the day your payments process.</p>
+      <div class="selwrap"><select class="selbox" id="sel2"><option value="5">5th of each month</option><option value="25">25th of each month</option></select></div>
+      <div id="res">${resolvedLine(5)}</div>`,
+    '5':()=>`<p class="optname">Radio cards</p><p class="lbl">Payment Start Date</p>
+      <p class="sub">Payments run on the 5th &amp; 25th.</p>
+      <div class="rcard on" data-d="5"><span class="rdot"></span><span><span class="t">5th of each month</span><span class="d">First payment ${DATE5}</span></span></div>
+      <div class="rcard" data-d="25"><span class="rdot"></span><span><span class="t">25th of each month</span><span class="d">First payment ${DATE25}</span></span></div>`,
+    '6':()=>`<p class="optname">Inline sentence</p><p class="lbl">Payment Start Date</p>
+      <div class="sentence">Start my first payment on the
+      <span class="inlinesel"><select id="sel4"><option value="5">5th</option><option value="25">25th</option></select></span> of each month.</div>
+      <div id="res">${resolvedLine(5)}</div>`,
+    '7':()=>`<p class="optname">Upcoming dates</p><p class="lbl">Payment Start Date</p>
+      <p class="sub">Pick your first payment date (5th &amp; 25th only).</p>
+      <div class="chips">
+        <button class="chip on" data-v="October 5, 2026">Oct 5<span class="sm">soonest</span></button>
+        <button class="chip" data-v="October 25, 2026">Oct 25<span class="sm">&nbsp;</span></button>
+        <button class="chip" data-v="November 5, 2026">Nov 5<span class="sm">&nbsp;</span></button>
+        <button class="chip" data-v="November 25, 2026">Nov 25<span class="sm">&nbsp;</span></button>
+        <button class="chip" data-v="December 5, 2026">Dec 5<span class="sm">&nbsp;</span></button>
+        <button class="chip" data-v="December 25, 2026">Dec 25<span class="sm">&nbsp;</span></button>
+      </div>
+      <div class="resolved" id="res">First payment: <b>October 5, 2026</b></div>`
+  };
+
+  function draw(){ if(cur==='1') selDay=5; slot.innerHTML=RENDER[cur](); }
+  draw();
+
+  document.querySelector('.switch').addEventListener('click',e=>{
+    const b=e.target.closest('[data-o]'); if(!b)return;
+    cur=b.dataset.o;
+    document.querySelectorAll('.switch button').forEach(x=>x.classList.toggle('on',x===b));
+    draw();
+  });
+
+  slot.addEventListener('click',e=>{
+    const day=e.target.closest('.day'); if(day && !day.classList.contains('empty')){
+      if(day.classList.contains('avail')){ selDay=+day.dataset.day; document.getElementById('nudge').textContent=''; slot.querySelector('.grid').innerHTML=buildCal(); }
+      else { document.getElementById('nudge').textContent='Only the 5th and 25th are available for this campaign.'; }
+    }
+    const seg=e.target.closest('.seg b'); if(seg){ slot.querySelectorAll('.seg b').forEach(x=>x.classList.remove('on')); seg.classList.add('on'); document.getElementById('res').innerHTML=resolvedLine(seg.dataset.d); }
+    const rc=e.target.closest('.rcard'); if(rc){ slot.querySelectorAll('.rcard').forEach(x=>x.classList.remove('on')); rc.classList.add('on'); }
+    const chip=e.target.closest('.chip'); if(chip){ slot.querySelectorAll('.chip').forEach(x=>x.classList.remove('on')); chip.classList.add('on'); document.getElementById('res').innerHTML=`First payment: <b>${chip.dataset.v}</b>`; }
+    const db=e.target.closest('.datebtn'); if(db){ slot.querySelectorAll('.datebtn').forEach(x=>x.classList.remove('on')); db.classList.add('on'); }
+  });
+  slot.addEventListener('change',e=>{ if(e.target.id==='sel2'||e.target.id==='sel4') document.getElementById('res').innerHTML=resolvedLine(e.target.value); });
+</script>
+</body>
+</html>

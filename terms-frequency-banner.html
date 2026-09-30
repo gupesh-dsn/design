@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terms — Frequency Type dependency banner</title>
+<style>
+  :root{
+    --content:#eef0f3;--title:#5a6a80;--tabbg:#e7eaee;--tabtx:#55606f;--tabon:#46566d;--under:#2c3a52;
+    --ink:#2b333e;--mut:#8a93a0;--line:#e3e6ea;--ib:#ccd2da;--blue:#4a90d9;--orange:#f0a340;
+    --hdr:#f0f1f3;--stripe:#f7f8f9;
+    --info:#2f6aa8;--infobg:#eef5fc;--infobd:#cfe3f6;--infoicon:#3b82c4;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:#dfe3e8;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:1.45}
+  .page{max-width:1080px;margin:0 auto;padding:26px 18px 70px}
+  .note{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 20px;margin-bottom:16px}
+  .note h1{margin:0 0 4px;font-size:17px;color:var(--title)}
+  .note p{margin:0;color:#4a5566;font-size:13px}
+
+  .win{border:1px solid #c4ccd6;border-radius:9px;overflow:hidden;background:#fff;box-shadow:0 6px 18px rgba(30,40,60,.12)}
+  .winbar{height:30px;background:#e3e6ea;border-bottom:1px solid #cfd5dd;display:flex;align-items:center;gap:7px;padding:0 12px}
+  .tl{display:flex;gap:6px}.tl i{width:10px;height:10px;border-radius:50%;background:#c3c9d2;display:block}
+  .url{flex:1;background:#fff;border:1px solid #d3d9e0;border-radius:5px;height:19px;font-size:10.5px;color:#8a93a0;display:flex;align-items:center;padding:0 9px}
+
+  .tabs{display:flex;flex-wrap:wrap;background:#fff;border-bottom:2px solid var(--under)}
+  .tab{padding:12px 15px;font-size:13px;color:var(--tabtx);background:var(--tabbg);border-right:1px solid #dde1e6;white-space:nowrap}
+  .tab.on{background:var(--tabon);color:#fff;font-weight:600}
+
+  .panel{background:#fff;padding:0}
+  .sechdr{background:var(--hdr);border-bottom:1px solid var(--line);padding:14px 20px;font-weight:700;font-size:15px;color:#3a4250}
+  .sechdr .rq{color:#e2401c}
+
+  /* info banner */
+  .banner{display:flex;gap:12px;align-items:flex-start;background:var(--infobg);border:1px solid var(--infobd);
+    border-left:4px solid var(--infoicon);border-radius:6px;margin:16px 20px;padding:13px 15px}
+  .banner .ic{color:var(--infoicon);font-size:18px;line-height:1.3;flex:0 0 auto}
+  .banner .tx{color:var(--info);font-size:13.5px;line-height:1.5}
+  .banner .tx b{font-weight:700}
+
+  /* frequency list */
+  .flist{margin:4px 0 0}
+  .frow{display:flex;align-items:center;gap:14px;padding:15px 20px;border-bottom:1px solid #eef0f2}
+  .frow:nth-child(even){background:var(--stripe)}
+  .cb{width:20px;height:20px;border:1.5px solid var(--blue);border-radius:3px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;background:#fff}
+  .cb.on{background:var(--blue)}
+  .cb.on::after{content:"✓";color:#fff;font-size:13px;font-weight:700}
+  .cb.dis{border-color:#cfd4da;background:#f1f3f5}
+  .flabel{font-size:15px;color:#2b333e}
+  .frow.selall .flabel{font-weight:700}
+  .frow.dis{background:#fafbfc}
+  .frow.dis .flabel{color:#a2abb5}
+  .unavail{margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-size:12px;color:#8892a0;
+    background:#eef0f3;border:1px solid #e0e4e9;border-radius:999px;padding:3px 11px;font-weight:500}
+
+  .subrow{display:flex;align-items:center;padding:16px 20px;border-bottom:1px solid #eef0f2;gap:16px}
+  .subrow .lb{font-weight:700;color:#3a4250;width:230px;text-align:right}
+  .cb2{width:20px;height:20px;border:1.5px solid #ccd2da;border-radius:3px;background:#fff}
+
+  .foot{display:flex;justify-content:center;gap:12px;padding:20px}
+  .btn{border:none;border-radius:5px;padding:11px 20px;font-weight:600;font-size:14px;color:#fff;font-family:inherit;display:inline-flex;align-items:center;gap:8px}
+  .btn.prev{background:var(--orange)}.btn.next{background:var(--blue)}.btn.fin{background:#5b9bde}
+
+  .cap{font-size:12px;color:#7a8494;margin:12px 2px 0}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="note">
+    <h1>Terms — Frequency Type with dependency banner</h1>
+    <p>Info banner sits directly under the “Frequency Type” header and explains the cause; Weekly &amp; Bi-Weekly render disabled with a quiet “Unavailable” tag so the list and the banner agree.</p>
+  </div>
+
+  <div class="win">
+    <div class="winbar"><div class="tl"><i></i><i></i><i></i></div><div class="url">givecentral.org/admin/events/addevent</div></div>
+
+    <div class="tabs">
+      <div class="tab">Events</div><div class="tab">Details and Dates</div><div class="tab">Venue</div>
+      <div class="tab on">Terms</div><div class="tab">Texting</div><div class="tab">Select Event Parishes</div>
+      <div class="tab">Designation</div><div class="tab">Select Event Image</div>
+    </div>
+
+    <div class="panel">
+      <div class="sechdr">Frequency Type<span class="rq">*</span></div>
+
+      <div class="banner">
+        <div class="ic">ⓘ</div>
+        <div class="tx"><b>Weekly and Bi-Weekly aren’t available</b> because you’ve set specific Payment Processing Days (5, 25). To offer weekly or bi-weekly giving, clear Payment Processing Days first.</div>
+      </div>
+
+      <div class="flist">
+        <div class="frow selall"><span class="cb"></span><span class="flabel">Select All</span></div>
+        <div class="frow"><span class="cb on"></span><span class="flabel">One-Time</span></div>
+        <div class="frow dis"><span class="cb dis"></span><span class="flabel">Weekly</span><span class="unavail">🔒 Unavailable</span></div>
+        <div class="frow dis"><span class="cb dis"></span><span class="flabel">Bi-Weekly</span><span class="unavail">🔒 Unavailable</span></div>
+        <div class="frow"><span class="cb on"></span><span class="flabel">Monthly</span></div>
+        <div class="frow"><span class="cb on"></span><span class="flabel">Quarterly</span></div>
+        <div class="frow"><span class="cb on"></span><span class="flabel">Semi-Annually</span></div>
+        <div class="frow"><span class="cb on"></span><span class="flabel">Annually</span></div>
+      </div>
+
+      <div class="subrow"><span class="lb">Allow donor to modify/delete gifts.</span><span class="cb2"></span></div>
+
+      <div class="foot">
+        <button class="btn prev">◀ Previous</button>
+        <button class="btn next">Next ▶</button>
+        <button class="btn fin">Finish Editing</button>
+      </div>
+    </div>
+  </div>
+
+  <p class="cap">Notes: banner is informational blue (not error red) and names the real days (5, 25) · disabled rows keep a muted checkbox + “Unavailable” tag so the greying isn’t carried by color alone · “Select All” selects only the available frequencies. If your list has no Bi-Weekly row, just drop that row — the banner copy stays.</p>
+</div>
+</body>
+</html>
